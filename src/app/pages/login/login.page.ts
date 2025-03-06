@@ -63,6 +63,7 @@ export class LoginPage implements OnInit {
 
   login() {
     // this.showLoading('Logging in', true);
+    // this.router.navigate(['/home']);
     if (this.tokenHidden) {
       console.log(this.loginForm.value);
 
@@ -74,7 +75,7 @@ export class LoginPage implements OnInit {
       }
     }
     else{
-      
+      this.router.navigate(['/tabs/tab1']); // Navigate to the desired route
     }
   }
 }

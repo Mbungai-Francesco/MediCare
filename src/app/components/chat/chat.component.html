@@ -1,0 +1,10 @@
+<div class="flex items-center gap-3 p-3 hover:bg-gray-200 cursor-pointer">
+  <div class="w-10 h-10 bg-gray-400 rounded-full"></div>
+  <div class="flex-1">
+    <p class="font-semibold">{{doc.name}}</p>
+    <p class="text-sm text-gray-500 truncate">
+      {{doc.speciality}}
+    </p>
+  </div>
+  <span [class]="'text-sm text-white p-2 rounded-lg ' + (doc.available ? 'bg-blue-600 ' : 'bg-red-600 ')">{{doc.available ? 'Open' : 'Closed'}}</span>
+</div>

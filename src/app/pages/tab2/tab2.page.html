@@ -1,0 +1,59 @@
+<ion-content [fullscreen]="true">
+  <!-- <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Blank</ion-title>
+    </ion-toolbar>
+  </ion-header> -->
+
+  <div
+    id="container"
+    class="h-full p-4 pb-0 relative flex flex-col justify-between"
+  >
+    <div>
+      <h1 class="text-3xl font-semibold">Doctors</h1>
+      <p class="mb-2">
+        Start with Ionic
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://ionicframework.com/docs/components"
+          >UI Components</a
+        >
+      </p>
+    </div>
+
+    <div class="flex-grow overflow-y-scroll flex flex-col">
+      <div class="p-3 pb-0">
+        <input
+          type="text"
+          placeholder="Search or start a new chat"
+          class="w-full p-2 border rounded-lg text-sm"
+        />
+        <div class="p-3 pb-0 grid grid-cols-2">
+          <div class="text-center flex justify-center">
+            <p class="py-1 px-4 rounded-2xl bg-gray-500 w-fit h-fit bg-gray-500/50"
+              (click)="filteredDocs('recent')"
+            >Recent</p>
+          </div>
+          <div class="text-center flex justify-center">
+            <p class="py-1 px-4 rounded-2xl bg-gray-500 w-fit h-fit bg-gray-500/50 "
+            (click)="filteredDocs('all')"
+            >All</p>
+          </div>
+        </div>
+      </div>
+      <div class="divide-y">
+        @for (doc of filtered; track $index) {
+        <app-chat [doc]="doc"></app-chat>
+        }
+        <!-- <app-chat/> -->
+      </div>
+    </div>
+
+    <!-- <div
+      class="h-[70px] w-[70px] rounded-full bg-blue-600 absolute bottom-5 right-5 animate-bounce flex items-center justify-center"
+    >
+      <ion-icon name="logo-reddit" class="text-4xl"></ion-icon>
+    </div> -->
+  </div>
+</ion-content>
