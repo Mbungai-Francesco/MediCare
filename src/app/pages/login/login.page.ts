@@ -31,6 +31,9 @@ export class LoginPage implements OnInit {
   messageStatus!: boolean;
   message = '';
 
+  tokenHidden = true;
+  restHidden = false;
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -46,7 +49,9 @@ export class LoginPage implements OnInit {
     });
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required],
+      name: ['', Validators.required],
+      number: [6, Validators.required],
+      token: ['', Validators.required],
     });
   }
 
@@ -57,36 +62,19 @@ export class LoginPage implements OnInit {
   }
 
   login() {
-    this.showLoading('Logging in', true);
-    console.log(this.loginForm.value);
-    if (this.loginForm.valid) {
-      console.log('am in');
+    // this.showLoading('Logging in', true);
+    if (this.tokenHidden) {
+      console.log(this.loginForm.value);
 
       const val = this.loginForm.value;
-
-      loginUser(val.email, val.password).then((user) => {
-        this.showLoading('', false);
-        if (user) {
-          console.log(user);
-          this.userService.setUser(user);
-          getArtists(user.jwt || '').then((val) => {
-            if (val) {
-              this.artistsService.setArtists(val);
-            }
-          });
-          userRatings(user.id, user.jwt || '').then((val) => {
-            if (val) {
-              this.ratingService.setRatings(val);
-            }
-          });
-          this.router.navigate(['/artists']); // Navigate to the desired route
-        } else {
-          console.log('Error logging user');
-          this.message = 'Login Failed';
-          this.messageStatus = false;
-          this.messageToaster.nativeElement.click();
-        }
-      });
+      console.log(Math.floor(val.number / 100000000), val.name);
+      if (Math.floor(val.number / 100000000) == 6 && val.name != '') {
+        this.tokenHidden = false;
+        this.restHidden = true;
+      }
+    }
+    else{
+      
     }
   }
 }
