@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const mysql = require('mysql2');
 const twilio = require('twilio');
 require('dotenv').config();  // Load environment variables
+const  cors  = require('cors')
 
 const accountSid = process.env.ACCOUNT_SID;
 const authToken = process.env.AUTH_TOKEN;
@@ -20,6 +21,7 @@ const connection = mysql.createConnection({
 
 const app = express();
 app.use(bodyParser.json());
+app.use(cors());
 
 let verificationCodes = {};
 
@@ -61,7 +63,7 @@ app.post('/send-code', async (req, res) => {
 });
 
 // 📌 Verify Code & Save User (Ensuring Unique Phone Numbers)
-app.post('/verify-code', (req, res) => {
+app.post('/verify-code', async (req, res) => {
     const { phoneNumber, code } = req.body;
     if (!phoneNumber || !code) return res.status(400).json({ error: 'Phone number and code are required' });
 
