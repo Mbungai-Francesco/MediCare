@@ -72,5 +72,53 @@ export const getDoctors = async (jwt: string | null) => {
 };
 
 export const createRecord = async (record : Record) =>{
-  
+  try {
+    const res = await axios.post(`${link}/store-record`, record);
+    console.log("message", res.statusText);
+    const use = res.data;
+    console.log(res.data);
+    return use
+  } catch (error) {
+    console.error('Error fetching doctors:', error);
+    return null;
+  }
+}
+
+export const getRecords = async (phoneNumber : number) =>{
+  try {
+    const res = await axios.get(`${link}/get-records/${phoneNumber}`);
+    console.log("message", res.statusText);
+    const use = res.data;
+    console.log(res.data);
+    return use.data as Record[]
+  } catch (error) {
+    console.error('Error fetching doctors:', error);
+    return null;
+  }
+}
+
+export const updateRecord = async (id: number) =>{
+  try {
+    const res = await axios.put(`${link}/update-record/${id}`);
+    console.log("message", res.statusText);
+    const use = res.data;
+    console.log(res.data);
+    return use
+  } catch (error) {
+    console.error('Error fetching doctors:', error);
+    return null;
+  }
+}
+
+export const deleteRecord = async (id : number) =>{
+  try {
+    const res = await axios.delete(`${link}/delete-record/${id}`);
+    console.log("message", res.statusText);
+    const use = res.data;
+    console.log(res.data);
+    return use
+  } catch (error) {
+    console.error('Error fetching doctors:', error);
+    return null;
+  }
 }

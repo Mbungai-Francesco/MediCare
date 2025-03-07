@@ -5,11 +5,30 @@
     </ion-toolbar>
   </ion-header> -->
 
-  <div id="container" class=" h-full p-4 relative">
-    <h1 class="text-3xl font-semibold" (click)="clearUser()">Home</h1>
-    <p>
-      Welcome to Medicare
+  <div id="container" class=" h-full p-4 relative flex flex-col items-center text-center">
+    <h1 class="text-3xl font-semibold text-left" (click)="clearUser()">Home</h1>
+    <!-- Hero Section -->
+    <div class="hero-image">
+      <img src="assets/img/fam.jpg" alt="Health Consultation" class="w-48 h-48 object-cover rounded-lg shadow-lg">
+    </div>
+
+    <!-- Welcome Text -->
+    <h1 class="text-4xl font-bold mt-6 text-blue-600">Welcome to TeleHealth</h1>
+    <p class="mt-2 text-gray-700 text-lg">
+      Your AI-powered health assistant. Chat with our intelligent bot for quick medical insights.
     </p>
+
+    <!-- Call-to-Action Buttons -->
+    <div class="mt-6 w-full flex flex-col items-center gap-4">
+      <ion-button expand="full" color="primary" routerLink="/chatbot">Start Consultation</ion-button>
+      <ion-button expand="full" color="secondary" routerLink="/tabs/tab3">View Health Records</ion-button>
+    </div>
+
+    <!-- Floating Action Button (Chatbot Shortcut) -->
+    <div class="floating-button" routerLink="/chatbot">
+      <ion-icon name="chatbubbles-outline" class="text-4xl"></ion-icon>
+    </div>
+
 
     <div class="h-[70px] w-[70px] rounded-full bg-blue-600 absolute bottom-5 right-5 animate-bounce flex items-center justify-center"
     routerLink="/chatbot"
