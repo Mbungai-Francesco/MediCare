@@ -1,17 +1,42 @@
 <ion-header>
-  <ion-toolbar color="primary">
-    <ion-title>Health Chatbot</ion-title>
+  <ion-toolbar color="primary" slot="">
+    <div class="flex items-center">
+      <ion-icon
+        name="arrow-back"
+        class="text-xl mx-2"
+        routerLink="/tabs/tab1"
+      ></ion-icon>
+      <ion-title>Health Chatbot</ion-title>
+    </div>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [scrollEvents]="true">
-  <div class="messages-container">
-    <div *ngFor="let message of messages" [ngClass]="{'user-message': message.sender === 'user', 'bot-message': message.sender === 'bot'}">
-      <p>{{ message.text }}</p>
+  <div class="h-full flex flex-col">
+    <div class="messages-container flex-grow overflow-y-scroll py-2 px-2 space-y-2">
+      <div
+        *ngFor="let message of messages"
+        class="mb-2"
+        [ngClass]="{'user-message': message.sender === 'user', 'bot-message': message.sender === 'bot'}"
+      >
+        <p>{{ message.text }}</p>
+      </div>
     </div>
-  </div>
-  <div class="input-container">
-    <ion-input [(ngModel)]="userMessage" placeholder="Type your message" clearInput></ion-input>
-    <ion-button (click)="sendMessage()" expand="full" color="primary">Send</ion-button>
+    <div class="p-3 border-t bg-white flex items-center bottom-0 relative">
+      <input [(ngModel)]="userMessage" type="text" placeholder="Type a message..." 
+        class="flex-1 p-2 border rounded-lg text-sm">
+      <button (click)="sendMessage()" class="ml-2 bg-green-500 text-white px-3 py-2 rounded-lg">Send</button>
+    </div>
+    <!-- <div class="input-container">
+      <ion-input
+        [(ngModel)]="userMessage"
+        placeholder="Type your message"
+        clearInput
+        class="px-2"
+      ></ion-input>
+      <ion-button (click)="sendMessage()" expand="full" color="primary"
+        >Send</ion-button
+      >
+    </div> -->
   </div>
 </ion-content>

@@ -2,8 +2,8 @@ import axios from "axios";
 
 export const port = 5000
 
-// export const link = 'https://warm-reef-41256-e838c74ede11.herokuapp.com'
-export const link = 'http://localhost:3000'
+export const link = 'https://medcare-yju3.onrender.com'
+// export const link = 'http://localhost:3000'
 
 export const conf = (jwt : string) => {
   return {

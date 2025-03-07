@@ -4,13 +4,14 @@ import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonInput } from '@ionic/angular/standalone';
 import { Storage } from '@ionic/storage-angular';
 import * as stringSimilarity from 'string-similarity';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-chatbot',
   templateUrl: './chatbot.page.html',
   styleUrls: ['./chatbot.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonButton, IonInput],
+  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule, IonButton, IonInput, RouterLink],
   providers: [Storage]
 })
 export class ChatbotPage implements OnInit {

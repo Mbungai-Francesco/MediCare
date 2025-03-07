@@ -16,13 +16,15 @@ import { RatingService } from 'src/app/services/rating/rating.service';
 import { User } from 'src/app/types';
 import { sendCode, verifyCode } from 'src/app/api/userApi';
 import { UserDto } from 'src/app/types/userDto';
+import { Storage } from '@ionic/storage-angular';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
   standalone: true,
-  imports: [IonicModule, ReactiveFormsModule, RouterLink],
+  imports: [IonicModule, ReactiveFormsModule],
+  providers: [Storage],
 })
 export class LoginPage implements OnInit {
   loginForm!: FormGroup;
@@ -48,10 +50,16 @@ export class LoginPage implements OnInit {
     private userService: UserService,
     private artistsService: ArtistService,
     private loadingCtrl: LoadingController,
-    private ratingService: RatingService
+    private ratingService: RatingService,
+    private storage: Storage
   ) {}
 
   ngOnInit() {
+    this.storage.create().then(() => {
+      this.checkUser().then((res) => {
+        if (res) this.router.navigate(['/tabs/tab1'], { replaceUrl: true });
+      });
+    });
     this.loadingCtrl.create({}).then((res) => {
       this.loading = res;
     });
@@ -69,11 +77,19 @@ export class LoginPage implements OnInit {
     // this.loading.present();
   }
 
+  async checkUser() {
+    return await this.storage.get('user');
+  }
+
+  async saveUser() {
+    await this.storage.set('user', this.emptyUser);
+  }
+
   login() {
     // this.router.navigate(['/home']);
     if (this.tokenHidden) {
       console.log(this.loginForm.value);
-      
+
       const val = this.loginForm.value;
       console.log(Math.floor(val.number / 100000000), val.name);
       if (Math.floor(val.number / 100000000) == 6 && val.name != '') {
@@ -86,13 +102,18 @@ export class LoginPage implements OnInit {
         sendCode(this.emptyUser).then((res) => {
           this.showLoading('', false);
           console.log(res);
-
-          if (!res?.includes('Failed')) {
-            this.messageStatus = true;
-            this.message = 'Code sent successfully';
-            this.tokenHidden = false;
-            this.restHidden = true;
-            this.messageToaster.nativeElement.click();
+          if (res) {
+            if (!res?.includes('Failed')) {
+              this.messageStatus = true;
+              this.message = 'Code sent successfully';
+              this.tokenHidden = false;
+              this.restHidden = true;
+              this.messageToaster.nativeElement.click();
+            } else {
+              this.messageStatus = false;
+              this.message = 'Invalid phone number';
+              this.messageToaster.nativeElement.click();
+            }
           } else {
             this.messageStatus = false;
             this.message = 'Invalid phone number';
@@ -104,16 +125,21 @@ export class LoginPage implements OnInit {
       console.log(this.loginForm.value);
 
       const val = this.loginForm.value;
-      if ((val.token.toString().length == 4)) {
-        this.router.navigate(['/tabs/tab1']);
-
-        // this.showLoading('Logging in', true);
-        // verifyCode(this.emptyUser.phoneNumber, val.token).then((res) => {
-        //   if (res.name) {
-        //     console.log(res);
-        //     this.router.navigate(['/tabs/tab1']);
-        //   }
-        // });
+      if (val.token.toString().length == 4) {
+        this.showLoading('Logging in', true);
+        console.log(val.number, val.token);
+        
+        verifyCode(val.number, val.token).then((res) => {
+          if (res.name) {
+            console.log(res);
+            this.emptyUser.name = res.name;
+            this.emptyUser.phoneNumber = val.phoneNumber;
+            this.emptyUser.email = res.email;
+            this.saveUser().then(() =>{
+              this.router.navigate(['/tabs/tab1'], { replaceUrl: true });
+            })
+          }
+        });
       } else {
         this.messageStatus = false;
         this.message = 'Check Token';

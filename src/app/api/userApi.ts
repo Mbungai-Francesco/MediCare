@@ -22,6 +22,8 @@ export const sendCode = async (user : UserDto) => {
 export const verifyCode = async (phoneNumber: number, code : number) => {
   try{
     // console.log("Authorization Header:", config.headers); // Log the authorization header
+    console.log({phoneNumber, code});
+    
     const res = await axios.post(`${link}/verify-code`, {phoneNumber, code})
     console.log("message", res.statusText);
     const use = res.data
