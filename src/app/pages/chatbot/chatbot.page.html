@@ -1,0 +1,17 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Health Chatbot</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [scrollEvents]="true">
+  <div class="messages-container">
+    <div *ngFor="let message of messages" [ngClass]="{'user-message': message.sender === 'user', 'bot-message': message.sender === 'bot'}">
+      <p>{{ message.text }}</p>
+    </div>
+  </div>
+  <div class="input-container">
+    <ion-input [(ngModel)]="userMessage" placeholder="Type your message" clearInput></ion-input>
+    <ion-button (click)="sendMessage()" expand="full" color="primary">Send</ion-button>
+  </div>
+</ion-content>

@@ -1,0 +1,38 @@
+.chat-box {
+  padding: 10px;
+  max-height: 70vh;
+  overflow-y: scroll;
+}
+
+.message {
+  margin-bottom: 15px;
+}
+
+.bot-message {
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-radius: 10px;
+  max-width: 80%;
+  margin-left: 10px;
+}
+
+.user-message {
+  background-color: #007bff;
+  padding: 10px;
+  border-radius: 10px;
+  color: white;
+  max-width: 80%;
+  margin-left: auto;
+}
+
+.input-area {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+}
+
+ion-input {
+  flex: 1;
+  margin-right: 10px;
+}
