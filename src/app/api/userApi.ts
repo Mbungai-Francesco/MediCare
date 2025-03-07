@@ -57,3 +57,13 @@ export const getUser = async (id : string, jwt : string) => {
     return null
   }
 }
+export const getDoctors = async (jwt: string | null) => {
+  try {
+    const res = await axios.get(`${link}/doctors`);
+    console.log(res.data.doctors);
+    return res.data.doctors as User[]; 
+  } catch (error) {
+    console.error('Error fetching doctors:', error);
+    return null;
+  }
+};
