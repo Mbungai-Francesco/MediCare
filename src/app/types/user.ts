@@ -1,14 +1,8 @@
-import { Artist } from "./artist"
 
 export interface User{
-  id             :   string      
+  id             ?:   string      
   name           :   string
-  dateofbirth    :   Date
-  email          :   string      
-  password       :   string
-  followingIds   :   string[]    
-  followings     :   Artist[] 
-  jwt           ?:   string   
-  createdAt      :   Date    
-  updatedAt      :   Date  
+  dateofbirth    ?:   Date
+  email          ?:   string      
+  phoneNumber       :   number
 }

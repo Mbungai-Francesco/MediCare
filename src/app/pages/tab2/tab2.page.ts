@@ -74,7 +74,7 @@ export class Tab2Page {
       image: 'assets/images/doctor-6.jpg',
     },
     {
-      id: 1,
+      id: 7,
       name: 'Dr. Sarah Johnson',
       email: 'sarah.johnson@medclinic.com',
       phone: '(555) 123-4567',
@@ -84,7 +84,7 @@ export class Tab2Page {
       image: 'assets/images/doctor-1.jpg',
     },
     {
-      id: 2,
+      id: 8,
       name: 'Dr. Michael Chen',
       email: 'm.chen@medclinic.com',
       phone: '(555) 234-5678',
@@ -94,7 +94,7 @@ export class Tab2Page {
       image: 'assets/images/doctor-2.jpg',
     },
     {
-      id: 3,
+      id: 9,
       name: 'Dr. Emily Rodriguez',
       email: 'e.rodriguez@medclinic.com',
       phone: '(555) 345-6789',
@@ -104,7 +104,7 @@ export class Tab2Page {
       image: 'assets/images/doctor-3.jpg',
     },
     {
-      id: 4,
+      id: 10,
       name: 'Dr. James Wilson',
       email: 'j.wilson@medclinic.com',
       phone: '(555) 456-7890',
@@ -114,7 +114,7 @@ export class Tab2Page {
       image: 'assets/images/doctor-4.jpg',
     },
     {
-      id: 5,
+      id: 11,
       name: 'Dr. Lisa Patel',
       email: 'l.patel@medclinic.com',
       phone: '(555) 567-8901',
@@ -124,7 +124,7 @@ export class Tab2Page {
       image: 'assets/images/doctor-5.jpg',
     },
     {
-      id: 6,
+      id: 12,
       name: 'Dr. Robert Kim',
       email: 'r.kim@medclinic.com',
       phone: '(555) 678-9012',
@@ -133,7 +133,7 @@ export class Tab2Page {
       available: false,
       image: 'assets/images/doctor-6.jpg',
     },
-  ];
+];
 
   filtered: Doctor[] = []
 
