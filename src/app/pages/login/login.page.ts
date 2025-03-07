@@ -11,10 +11,11 @@ import { Router, RouterLink } from '@angular/router';
 import { LoadingController } from '@ionic/angular/standalone';
 import { UserService } from 'src/app/services/user/user.service';
 import { ArtistService } from 'src/app/services/artist/artist.service';
-import { loginUser } from 'src/app/api/userApi';
-import { getArtists } from 'src/app/api/artistApi';
-import { userRatings } from 'src/app/api/ratingApi';
+
 import { RatingService } from 'src/app/services/rating/rating.service';
+import { User } from 'src/app/types';
+import { sendCode, verifyCode } from 'src/app/api/userApi';
+import { UserDto } from 'src/app/types/userDto';
 
 @Component({
   selector: 'app-login',
@@ -28,11 +29,18 @@ export class LoginPage implements OnInit {
   loading!: HTMLIonLoadingElement;
   @ViewChild('messageToaster') messageToaster!: ElementRef;
 
+  emptyUser: UserDto = {
+    name: '',
+    phoneNumber: 0,
+  };
+
   messageStatus!: boolean;
   message = '';
 
   tokenHidden = true;
   restHidden = false;
+
+  // tokenEmpty = false;
 
   constructor(
     private fb: FormBuilder,
@@ -62,20 +70,56 @@ export class LoginPage implements OnInit {
   }
 
   login() {
-    // this.showLoading('Logging in', true);
     // this.router.navigate(['/home']);
     if (this.tokenHidden) {
       console.log(this.loginForm.value);
-
+      
       const val = this.loginForm.value;
       console.log(Math.floor(val.number / 100000000), val.name);
       if (Math.floor(val.number / 100000000) == 6 && val.name != '') {
-        this.tokenHidden = false;
-        this.restHidden = true;
+        this.showLoading('Logging in', true);
+        this.emptyUser.name = val.name;
+        this.emptyUser.phoneNumber = val.number;
+        if (val.email != '') {
+          this.emptyUser.email = val.email;
+        }
+        sendCode(this.emptyUser).then((res) => {
+          this.showLoading('', false);
+          console.log(res);
+
+          if (!res?.includes('Failed')) {
+            this.messageStatus = true;
+            this.message = 'Code sent successfully';
+            this.tokenHidden = false;
+            this.restHidden = true;
+            this.messageToaster.nativeElement.click();
+          } else {
+            this.messageStatus = false;
+            this.message = 'Invalid phone number';
+            this.messageToaster.nativeElement.click();
+          }
+        });
       }
-    }
-    else{
-      this.router.navigate(['/tabs/tab1']); // Navigate to the desired route
+    } else {
+      console.log(this.loginForm.value);
+
+      const val = this.loginForm.value;
+      if ((val.token.toString().length == 4)) {
+        this.router.navigate(['/tabs/tab1']);
+
+        // this.showLoading('Logging in', true);
+        // verifyCode(this.emptyUser.phoneNumber, val.token).then((res) => {
+        //   if (res.name) {
+        //     console.log(res);
+        //     this.router.navigate(['/tabs/tab1']);
+        //   }
+        // });
+      } else {
+        this.messageStatus = false;
+        this.message = 'Check Token';
+        this.messageToaster.nativeElement.click();
+      }
+      // this.router.navigate(['/tabs/tab1']); // Navigate to the desired route
     }
   }
 }

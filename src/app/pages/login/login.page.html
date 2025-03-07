@@ -47,6 +47,11 @@
                 placeholder="Tel number"
                 
               />
+              <p
+                [class]="(loginForm.get('number')?.value.toString().length != 9 && loginForm.get('number')?.touched) ? 'text-red-500 w-full italic mb-[0.5em] font-medium text-right' : 'hidden'"
+              >
+                Token is empty
+              </p>
             </label>
 
             <label for="" [hidden]="tokenHidden">
@@ -58,7 +63,7 @@
                 placeholder="Token"
               />
               <p
-                [class]="(loginForm.get('token')?.value == null && loginForm.get('token')?.touched) ? 'text-red-500 w-full italic mb-[0.5em] font-medium text-right' : 'hidden'"
+                [class]="(loginForm.get('token')?.value.toString().length != 4 && loginForm.get('token')?.touched) ? 'text-red-500 w-full italic mb-[0.5em] font-medium text-right' : 'hidden'"
               >
                 Token is empty
               </p>

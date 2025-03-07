@@ -1,13 +1,37 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>messagerie</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
+  <!-- <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">messagerie</ion-title>
+      <ion-title size="large">Blank</ion-title>
     </ion-toolbar>
-  </ion-header>
+  </ion-header> -->
+
+  <div class="h-full w-full mx-auto bg-pink-500 shadow-lg rounded-lg overflow-hidden relative flex flex-col">
+    <div class="bg-white p-3 border-b flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <ion-icon name="arrow-back" class="text-xl mr-2" routerLink="/tabs/tab2"></ion-icon>
+        <img src="assets/user.jpg" alt="User" class="w-10 h-10 rounded-full">
+        <span class="font-semibold text-sm">{{doc.name}}</span>
+      </div>
+      <div class="flex gap-3">
+        <button class="text-gray-500 text-xs">📞</button>
+        <button class="text-gray-500 text-xs">📎</button>
+      </div>
+    </div>
+    <div class="p-4 flex-grow overflow-y-auto bg-gray-200">
+      <div *ngFor="let msg of messages" [ngClass]="{'text-right': msg.sender === 'me'}">
+        <div class="inline-block px-4 py-2 m-1 rounded-lg" [ngClass]="{
+            'bg-green-500 text-white': msg.sender === 'me',
+            'bg-white text-gray-800': msg.sender !== 'me'
+          }">
+          {{ msg.text }}
+          <div class="text-xs text-gray-400 mt-1">{{ msg.time }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="p-3 border-t bg-white flex items-center bottom-0 relative">
+      <input [(ngModel)]="newMessage" type="text" placeholder="Type a message..." 
+        class="flex-1 p-2 border rounded-lg text-sm">
+      <button (click)="sendMessage()" class="ml-2 bg-green-500 text-white px-3 py-2 rounded-lg">Send</button>
+    </div>
+  </div>
 </ion-content>
