@@ -1,44 +1,39 @@
 import { Component, OnInit } from '@angular/core';
-import { ExploreContainerComponent } from '../../explore-container/explore-container.component';
 import { IonicModule } from '@ionic/angular';
 import { ChatComponent } from '../../components/chat/chat.component';
 import { Doctor } from 'src/app/types';
 import { getDoctors } from 'src/app/api/userApi'; // Import the getDoctors function
 
-
-import { FormsModule } from '@angular/forms'; // Import FormsModule
-
 @Component({
   selector: 'app-tab2',
   templateUrl: 'tab2.page.html',
   styleUrls: ['tab2.page.scss'],
-  imports: [IonicModule, ExploreContainerComponent, ChatComponent, FormsModule], // Add FormsModule
+  imports: [IonicModule, ChatComponent],
 })
 export class Tab2Page implements OnInit {
   doctors: Doctor[] = [];
   filtered: Doctor[] = [];
-  searchTerm: string = ''; // Add searchTerm variable
+  searchQuery: string = '';
 
   constructor() {}
 
   async ngOnInit() {
     await this.loadDoctors();
-    this.filteredDocs('all');
   }
 
   async loadDoctors() {
     try {
-      const jwt = localStorage.getItem('jwt-token');
+      const jwt = localStorage.getItem('jwt-token'); 
       const doctors = await getDoctors(jwt);
       if (doctors) {
         this.doctors = doctors.map(user => ({
-          id: user.id ? parseInt(user.id, 10) : 0,
+          id: user.id ? parseInt(user.id, 10) : 0, 
           name: user.name,
           available: user.available,
           speciality: user.speciality,
           image: user.image,
         }));
-        this.filteredDocs('all');
+        this.filteredDocs('all'); 
       } else {
         console.error('Failed to load doctors');
       }
@@ -48,14 +43,24 @@ export class Tab2Page implements OnInit {
   }
 
   filteredDocs(val: string) {
-    if (val === 'recent') {
-      this.filtered = this.doctors.filter(doc => doc.available);
-    } else {
-      this.filtered = this.doctors.filter(doc => 
-        doc.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        doc.speciality.toLowerCase().includes(this.searchTerm.toLowerCase())
+    let results = val === 'recent' ? this.doctors.filter(doc => doc.available) : [...this.doctors];
+    
+    // Apply search filter
+    if (this.searchQuery.trim()) {
+      results = results.filter(doc =>
+        doc.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+        doc.speciality.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
     }
-    return this.filtered;
+    
+    this.filtered = results;
+  }
+
+  filterDoctors() {
+    this.filteredDocs('all'); // Trigger filtering on search input
+  }
+
+  trackById(index: number, doc: Doctor) {
+    return doc.id; // Helps Angular optimize rendering
   }
 }

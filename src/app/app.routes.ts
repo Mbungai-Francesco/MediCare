@@ -22,5 +22,9 @@ export const routes: Routes = [
     path: ':id',
     loadComponent: () => import('./pages/messagerie/messagerie.page').then( m => m.MessageriePage)
   },
+  {
+    path: 'admin',
+    loadComponent: () => import('./pages/admin/admin.page').then( m => m.AdminPage)
+  },
 
 ];
