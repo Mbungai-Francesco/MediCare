@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, LoadingController } from '@ionic/angular';
 import { ChatComponent } from '../../components/chat/chat.component';
 import { Doctor } from 'src/app/types';
 import { getDoctors } from 'src/app/api/userApi'; // Import the getDoctors function
@@ -14,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class Tab2Page implements OnInit {
   showBarcode = false;
+  loading!: HTMLIonLoadingElement;
   @ViewChild('messageToaster') messageToaster!: ElementRef;
 
   doctors: Doctor[] = [];
@@ -27,17 +28,24 @@ export class Tab2Page implements OnInit {
 
   doc!: Doctor;
 
-  constructor() {}
+  constructor(
+    private loadingCtrl: LoadingController,
+  ) {}
 
-  async ngOnInit() {
-    await this.loadDoctors();
+  ngOnInit() {
+    this.loadDoctors();
+    this.loadingCtrl.create({}).then((res) => {
+      this.loading = res;
+    });
   }
 
-  async loadDoctors() {
-    try {
-      const jwt = localStorage.getItem('jwt-token');
-      const doctors = await getDoctors(jwt);
+  loadDoctors() {
+    const jwt = localStorage.getItem('jwt-token');
+    this.showLoading('Logging in', true);
+    getDoctors().then((doctors) => {
       if (doctors) {
+        console.log(doctors);
+        this.showLoading('Logging in', false);
         this.doctors = doctors.map((user) => ({
           id: user.id ? parseInt(user.id, 10) : 0,
           name: user.name,
@@ -45,12 +53,36 @@ export class Tab2Page implements OnInit {
           speciality: user.speciality,
           image: user.image,
         }));
+        localStorage.setItem('doctors', JSON.stringify(this.doctors)); // Store locally
         this.filteredDocs('all');
       } else {
         console.error('Failed to load doctors');
+        console.error('Error loading doctors:');
+      this.loadDoctorsFromLocalStorage(); // Load from local storage in case of error
       }
-    } catch (error) {
-      console.error('Error loading doctors:', error);
+    });
+
+    
+    // try {
+    // } catch (error) {
+    //   console.error('Error loading doctors:', error);
+    //   this.loadDoctorsFromLocalStorage(); // Load from local storage in case of error
+    // }
+  }
+
+  async showLoading(mes: string, openOrClose: boolean) {
+    this.loading.message = mes;
+    this.loading.isOpen = openOrClose;
+    // this.loading.present();
+  }
+
+  loadDoctorsFromLocalStorage() {
+    const storedDoctors = localStorage.getItem('doctors');
+    if (storedDoctors) {
+      this.doctors = JSON.parse(storedDoctors);
+      this.filteredDocs('all');
+    } else {
+      console.error('No doctors found in local storage');
     }
   }
 
@@ -88,6 +120,7 @@ export class Tab2Page implements OnInit {
   cancel() {
     this.showBarcode = false;
   }
+
   reserve() {
     console.log(this.date);
     this.showBarcode = false;

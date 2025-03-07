@@ -1,0 +1,21 @@
+<div
+  class="flex items-center gap-3 p-3 justify-between hover:bg-gray-200 cursor-pointer w-full"
+>
+  <div class="flex items-center flex-grow">
+    <div class="w-10 h-10 bg-gray-400 rounded-full mr-2"></div>
+    <div class="flex-1">
+      <p class="font-semibold">{{ rec.diagnosis }}</p>
+      <p class="ml-2 text-sm text-gray-500 truncate">
+        {{ rec.prescription }}
+      </p>
+    </div>
+  </div>
+  <!-- <span
+    [class]="
+      'text-sm text-white p-2 rounded-lg ' +
+      (doc.available ? 'bg-blue-600 ' : 'bg-red-600 ')
+    "
+    (click)="onDoctorClick()"
+    >{{ doc.available ? "Open" : "Closed" }}</span
+  > -->
+</div>

@@ -5,6 +5,8 @@ import { IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonInput } from
 import { Storage } from '@ionic/storage-angular';
 import * as stringSimilarity from 'string-similarity';
 import { RouterLink } from '@angular/router';
+import { RecordService } from 'src/app/services/record/record.service';
+import { Record } from 'src/app/types';
 
 @Component({
   selector: 'app-chatbot',
@@ -73,11 +75,27 @@ export class ChatbotPage implements OnInit {
     }
   };
 
-  constructor(private storage: Storage) { }
+  patient !: {
+    phoneNumber : number;
+    name : string;
+    email ?: string
+  }
+
+  emptyRecord: Record = {
+    phoneNumber: 0,
+    diagnosis: '',
+    prescription: ''
+};
+
+  constructor(
+    private storage: Storage,
+    private recordService : RecordService
+  ) { }
 
   async ngOnInit(): Promise<void> {
     await this.storage.create();
     this.loadMessages();
+    this.getPatient();
     this.messages.push({ sender: 'bot', text: "Hello! How can I assist you today?" });
   }
 
@@ -88,8 +106,19 @@ export class ChatbotPage implements OnInit {
     }
   }
 
+  getPatient() {
+    this.storage.get('user').then((user)=>{
+      this.patient = user;
+      console.log(this.patient);
+    })
+  }
+
   async saveMessages() {
     await this.storage.set('chatMessages', this.messages);
+  }
+
+  clearMessages() {
+    this.storage.set('chatMessages', []);
   }
 
   async sendMessage() {
@@ -97,6 +126,9 @@ export class ChatbotPage implements OnInit {
       this.messages.push({ sender: 'user', text: this.userMessage });
 
       this.checkGreeting(this.userMessage.trim().toLowerCase()) || this.extractSymptomsFromMessage(this.userMessage.trim().toLowerCase());
+
+      // console.log(this.extractSymptomsFromMessage(this.userMessage.trim().toLowerCase()))
+      
 
       await this.saveMessages();
 
@@ -116,8 +148,9 @@ export class ChatbotPage implements OnInit {
 
   extractSymptomsFromMessage(message: string) {
     const possibleSymptoms = Object.keys(this.symptomConditions);
+    
     const bestMatch = stringSimilarity.findBestMatch(message, possibleSymptoms).bestMatch;
-
+    
     if (bestMatch.rating > 0.5) {
       const condition = this.symptomConditions[bestMatch.target];
       let response = `I'm sorry to hear you're experiencing ${bestMatch.target}. ${condition.condition}. ${condition.firstAid}`;
@@ -125,6 +158,17 @@ export class ChatbotPage implements OnInit {
         response += ` ${condition.specificAdvice}`;
       }
       this.messages.push({ sender: 'bot', text: response });
+      console.log(condition.condition);
+      console.log(condition.firstAid);
+      console.log(this.patient);
+      
+      this.emptyRecord = {
+        phoneNumber : this.patient.phoneNumber,
+        diagnosis: condition.condition,
+        prescription: condition.firstAid
+      }
+      this.recordService.addRecord(this.emptyRecord)
+
     } else {
       this.messages.push({ sender: 'bot', text: "I'm sorry, I couldn't identify a symptom from your message." });
     }

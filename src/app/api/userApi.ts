@@ -60,7 +60,7 @@ export const getUser = async (id: string, jwt: string) => {
 };
 
 // Function to get all doctors
-export const getDoctors = async (jwt: string | null) => {
+export const getDoctors = async () => {
   try {
     const res = await axios.get(`${link}/doctors`);
     console.log(res.data.doctors);
@@ -89,8 +89,8 @@ export const getRecords = async (phoneNumber : number) =>{
     const res = await axios.get(`${link}/get-records/${phoneNumber}`);
     console.log("message", res.statusText);
     const use = res.data;
-    console.log(res.data);
-    return use.data as Record[]
+    console.log(res.data.records);
+    return use.records as Record[]
   } catch (error) {
     console.error('Error fetching doctors:', error);
     return null;

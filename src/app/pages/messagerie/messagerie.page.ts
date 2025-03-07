@@ -43,7 +43,7 @@ export class MessageriePage implements OnInit {
 
   async loadDoctors() {
     const jwt = localStorage.getItem('jwt-token');  // Replace with your JWT logic if needed
-    const users = await getDoctors(jwt) || [];
+    const users = await getDoctors() || [];
     this.doctors = users.map(user => ({
       ...user,
       id: Number(user.id)
