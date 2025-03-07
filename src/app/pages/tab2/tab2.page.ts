@@ -1,19 +1,31 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { ChatComponent } from '../../components/chat/chat.component';
 import { Doctor } from 'src/app/types';
 import { getDoctors } from 'src/app/api/userApi'; // Import the getDoctors function
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-tab2',
   templateUrl: 'tab2.page.html',
   styleUrls: ['tab2.page.scss'],
-  imports: [IonicModule, ChatComponent],
+  imports: [IonicModule, ChatComponent, CommonModule, FormsModule],
 })
 export class Tab2Page implements OnInit {
+  showBarcode = false;
+  @ViewChild('messageToaster') messageToaster!: ElementRef;
+
   doctors: Doctor[] = [];
   filtered: Doctor[] = [];
   searchQuery: string = '';
+
+  messageStatus!: boolean;
+  message = '';
+
+  date = new Date();
+
+  doc!: Doctor;
 
   constructor() {}
 
@@ -23,17 +35,17 @@ export class Tab2Page implements OnInit {
 
   async loadDoctors() {
     try {
-      const jwt = localStorage.getItem('jwt-token'); 
+      const jwt = localStorage.getItem('jwt-token');
       const doctors = await getDoctors(jwt);
       if (doctors) {
-        this.doctors = doctors.map(user => ({
-          id: user.id ? parseInt(user.id, 10) : 0, 
+        this.doctors = doctors.map((user) => ({
+          id: user.id ? parseInt(user.id, 10) : 0,
           name: user.name,
           available: user.available,
           speciality: user.speciality,
           image: user.image,
         }));
-        this.filteredDocs('all'); 
+        this.filteredDocs('all');
       } else {
         console.error('Failed to load doctors');
       }
@@ -43,16 +55,20 @@ export class Tab2Page implements OnInit {
   }
 
   filteredDocs(val: string) {
-    let results = val === 'recent' ? this.doctors.filter(doc => doc.available) : [...this.doctors];
-    
+    let results =
+      val === 'recent'
+        ? this.doctors.filter((doc) => doc.available)
+        : [...this.doctors];
+
     // Apply search filter
-    if (this.searchQuery.trim()) {
-      results = results.filter(doc =>
-        doc.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-        doc.speciality.toLowerCase().includes(this.searchQuery.toLowerCase())
+    if (this.searchQuery) {
+      results = results.filter(
+        (doc) =>
+          doc.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+          doc.speciality.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
     }
-    
+
     this.filtered = results;
   }
 
@@ -62,5 +78,21 @@ export class Tab2Page implements OnInit {
 
   trackById(index: number, doc: Doctor) {
     return doc.id; // Helps Angular optimize rendering
+  }
+
+  openModal(val: number) {
+    this.doc = this.doctors.find((doc) => doc.id === val) || ({} as Doctor);
+    this.showBarcode = this.doc.available;
+  }
+
+  cancel() {
+    this.showBarcode = false;
+  }
+  reserve() {
+    console.log(this.date);
+    this.showBarcode = false;
+    this.messageStatus = true;
+    this.message = 'Scheduled successfully';
+    this.messageToaster.nativeElement.click();
   }
 }

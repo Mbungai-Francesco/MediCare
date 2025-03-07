@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Doctor } from 'src/app/types';
 
@@ -12,9 +12,13 @@ import { Doctor } from 'src/app/types';
 export class ChatComponent  implements OnInit {
 
   @Input() doc !: Doctor
+  @Output() openIt = new EventEmitter<number>()
 
   constructor() { }
 
   ngOnInit() {}
 
+  onDoctorClick(): void {
+    this.openIt.emit(this.doc.id);
+  }
 }

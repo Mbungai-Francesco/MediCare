@@ -1,6 +1,6 @@
 import axios from "axios";
 import { link, conf } from ".";
-import { User } from "../types";
+import { Record, User } from "../types";
 import { UserDto } from "../types/userDto";
 
 const route: string = "api/users";
@@ -70,3 +70,7 @@ export const getDoctors = async (jwt: string | null) => {
     return null;
   }
 };
+
+export const createRecord = async (record : Record) =>{
+  
+}
